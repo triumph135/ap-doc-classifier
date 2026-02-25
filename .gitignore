@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# data
+data/docs/
+data/holdout_eval/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.bmp
+
+# outputs
+predictions.csv
+holdout_results.csv
+
+# streamlit
+.streamlit/
+
+# model artifacts (choose one option)
+# If you DO want to commit the model, comment this line out:
+# doc_type_model.joblib

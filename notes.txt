@@ -1,0 +1,4 @@
+
+Run below to get list of docs in a directory, to add into label csv, with a label.
+
+python -c "from pathlib import Path; exts={'.pdf','.png','.jpg','.jpeg','.tif','.tiff','.bmp'}; p=Path('data/docs'); print('path,label'); [print(f'{f.as_posix()},') for f in p.rglob('*') if f.suffix.lower() in exts]"
