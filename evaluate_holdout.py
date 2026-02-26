@@ -2,6 +2,7 @@ import pandas as pd
 import joblib
 
 from train_model import extract_text, clean_text  # reuse your functions
+from sklearn.metrics import classification_report, confusion_matrix
 
 def main():
     model = joblib.load("doc_type_model.joblib")
@@ -40,6 +41,15 @@ def main():
           , "\nCorrect:", out["correct"].sum()
           , "\nWrong:", (~out["correct"]).sum()
           , "\nAccuracy:", out["correct"].mean())
+    print(out[out["correct"]][["path","label","pred","prob"]])
+
+    print("\n=== Classification report ===")
+    print(classification_report(y_true, y_pred))
+
+    print("\n=== Confusion matrix (rows=true, cols=pred) ===")
+    labels_sorted = sorted(list(set(y_true)))
+    print(labels_sorted)
+    print(confusion_matrix(y_true, y_pred, labels=labels_sorted))
 
 if __name__ == "__main__":
     main()

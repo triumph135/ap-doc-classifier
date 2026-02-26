@@ -7,15 +7,22 @@ import streamlit as st
 
 import fitz  # pymupdf
 from PIL import Image
+import shutil
+import os
 import pytesseract
 
 
 # ---- Config ----
 MODEL_PATH = "doc_type_model.joblib"
 import os
-TESSERACT_EXE = os.environ.get("TESSERACT_CMD", "")
+TESSERACT_EXE = os.environ.get("TESSERACT_CMD")
 if TESSERACT_EXE:
     pytesseract.pytesseract.tesseract_cmd = TESSERACT_EXE
+else:
+    # If tesseract is installed via packages.txt it should be on PATH
+    if shutil.which("tesseract") is None:
+        # No OCR available on this host
+        pass
 
 SUPPORTED_EXT = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"}
 
