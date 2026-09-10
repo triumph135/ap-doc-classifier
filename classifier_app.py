@@ -27,7 +27,7 @@ else:
 SUPPORTED_EXT = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"}
 
 
-# ---- Text extraction (same idea as your training script) ----
+# ---- Text extraction ----
 def ocr_image(img: Image.Image) -> str:
     w, h = img.size
     if max(w, h) < 1500:
