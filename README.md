@@ -62,7 +62,10 @@ Optional columns in `labels.csv`: `split` (`holdout` or blank) and `group` (for 
 streamlit run classifier_app.py                  # upload one document
 python predict_folder.py "C:\path\to\folder"     # classify a folder, writes predictions.csv
 python evaluate_holdout.py                       # score the promoted model on the holdout set
+python explain_prediction.py "C:\path\to\file.pdf"   # why the model scored one document that way
 ```
+
+The app has a "Why this result?" section that shows how familiar the document's wording is to the model and which words pushed the result toward each class. A low familiarity share usually means a vendor or format that was not in the training data.
 
 ## Things to know
 
@@ -80,6 +83,7 @@ docclf/               shared code: config, extraction, labels, evaluation, class
 train_model.py        train, evaluate, version and promote a model
 evaluate_holdout.py   score a model on the holdout set
 predict_folder.py     classify a folder of documents
+explain_prediction.py explain one prediction (scores, key words, familiarity)
 list_unlabeled.py     find documents that still need labels
 classifier_app.py     Streamlit app
 models/latest.*       the promoted model (committed); models/versions/ is local history
