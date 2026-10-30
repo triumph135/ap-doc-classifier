@@ -1,282 +1,90 @@
-Here’s a clean, GitHub-ready **README.md** based directly on your outline:
+# AP Document Classifier
 
----
+Classifies incoming accounts payable documents (scanned or digital PDFs and images) into one of four types, and reports the matching Cargas Energy document type. Low confidence documents are sent to manual review instead of being guessed.
 
-```markdown
-# Document Type Classifier
+| Model class | Cargas Energy document type |
+| --- | --- |
+| BOL Invoice (fuel invoice) | BOL Invoice |
+| BOL Purchase (fuel purchase, Bill of Lading) | Material Receipt |
+| PO Receipt | Material Receipt |
+| PO Invoice | PO Invoice |
 
-A lightweight machine learning document classifier built with:
+BOL Purchase and PO Receipt are both Material Receipts in Cargas Energy, but the model tells them apart because later steps in the workflow treat them differently.
 
-- Tesseract OCR
-- PyMuPDF
-- TF-IDF (scikit-learn)
-- Logistic Regression
-- Streamlit
+## How it works
 
-The system classifies operational business documents into defined categories such as:
+1. Text comes from the PDF itself when it has embedded text, otherwise from Tesseract OCR (first two pages).
+2. A TF IDF vectorizer turns the text into features: word and word pair features plus character features, which tolerate OCR typos. Numbers are collapsed so document numbers and dates do not add noise.
+3. A logistic regression model predicts the class and a confidence. Below the review threshold (default 0.90, set in `docclf/config.py`) the answer is "Manual Review".
 
-- Bill of Lading
-- Bill of Lading Invoice
-- Purchase Order Receipt
-- Purchase Order Invoice
+The method is deliberately simple, fast to retrain, and easy to explain. Training and prediction share one extraction module (`docclf/extraction.py`), so a document is always read the same way.
 
----
+## Setup (Windows)
 
-## Overview
+1. Install Python 3.12 or newer, Git, and Tesseract (the UB Mannheim Windows build). Put Tesseract on your PATH, or set the `TESSERACT_CMD` environment variable to the full path of `tesseract.exe`.
+2. Clone the repo somewhere outside OneDrive, then:
 
-This project uses OCR and text extraction to convert documents into text, vectorizes that text using TF-IDF, and applies a Logistic Regression model to predict document type.
-
-It is designed to be:
-
-- Simple
-- Interpretable
-- Fast to retrain
-- Effective with small datasets
-
----
-
-## Workflow
-
-### 1. Collect Example Documents
-
-Add labeled examples to:
-
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-data/labels.csv
+On Streamlit Cloud, `packages.txt` installs Tesseract.
 
+## Retraining (repeat whenever there are new labeled documents)
+
+All labels live in one master file, `data/labels.csv`, with columns `path,label,split,group`. Only `path` and `label` are required. Documents themselves live under `data/docs/` and are never committed.
+
+```powershell
+python list_unlabeled.py        # lists documents not yet in labels.csv, writes data/unlabeled.csv
 ```
 
-Format:
+1. Fill in the `label` column of `data/unlabeled.csv` with `BOL Invoice`, `BOL Purchase`, `PO Receipt` or `PO Invoice`, then append those rows to `data/labels.csv`.
+2. One time only, reserve a fixed holdout set that never trains the model: `python train_model.py --init-holdout 0.15`
+3. Train: `python train_model.py`
+4. Read the report in `models/versions/<timestamp>/report.txt`. `cv_predictions.csv` in the same folder lists mistakes first, which is the best place to find mislabeled or confusing documents.
+5. If the run says PROMOTED, commit `models/latest.joblib` and `models/latest.json`. The app loads those two files.
 
+What a run does:
+
+* Trains only the classes that have enough examples (default 20). A class with none yet is reported as not trained, and the app shows which classes the loaded model knows. Add examples of a new class and the next run picks it up with no code changes.
+* OCR results are cached by file fingerprint in `data/text_cache/`. The first run is slow because scanned pages are OCR'd. Later runs only process new files, and an interrupted run resumes where it stopped.
+* Exact duplicate files count once. Identical files with conflicting labels are excluded and reported.
+* Evaluates with 5 fold cross validation and the holdout set, and saves a dated model with a metadata file (classes, counts, library versions, scores).
+* Promotes the new model only if its holdout score is not worse than the current model on the same holdout documents.
+
+Optional columns in `labels.csv`: `split` (`holdout` or blank) and `group` (for example vendor or site). When `group` is filled in, documents from the same group are kept in the same cross validation fold, which gives a more honest score when many documents share a template.
+
+## Using the model
+
+```powershell
+streamlit run classifier_app.py                  # upload one document
+python predict_folder.py "C:\path\to\folder"     # classify a folder, writes predictions.csv
+python evaluate_holdout.py                       # score the promoted model on the holdout set
 ```
 
-path,label
-data/docs/doc1.pdf,Bill of Lading
-data/docs/doc2.pdf,Bill of Lading Invoice
+## Things to know
 
-````
+* **Class coverage.** A model can only answer with classes it was trained on. Until a class has examples, documents of that type will be sent to a different class or to manual review.
+* **Scanned versus digital documents.** If one class is mostly scans and another mostly digital PDFs, a model can learn the scan type instead of the content. The reports show accuracy by text source and by class and source. Watch for large gaps, and consider `python train_model.py --mode ocr` (OCR every page for consistency, slower).
+* **One document type per file.** Customers are instructed to send a BOL purchase or a BOL invoice on its own. A file that combines both is classified from its first pages and is best left out of the labels file.
+* **Text only.** The model reads words, not page layout. If two types share nearly identical wording, layout features or a layout aware model would be the next step.
+* **Library versions.** A saved model only loads reliably with the scikit-learn version that trained it. `requirements.txt` pins it, and the app warns on a mismatch.
+* **What is committed.** Documents, extracted text and zip exports are git ignored. The labels file lists file names, and the model file contains words from the training documents, so review those before publishing.
 
-**Notes:**
-
-- `path` = file location
-- `label` = one of the defined document classes
-- Labels must match spelling exactly
-
-Save documents into your training folder (e.g., `data/docs/`).
-
----
-
-### 2. Verify Training Paths
-
-Ensure file paths listed in `labels.csv` exist.
-
-Update any paths if documents were moved.
-
----
-
-### 3. Train the Model
-
-Run:
-
-```bash
-python train_model.py
-````
-
-#### Training Steps
-
-**a) Text Extraction**
-
-* Native PDF text (if available)
-* Otherwise → render PDF → Tesseract OCR
-
-**b) Feature Engineering**
-
-Text is vectorized using:
+## Layout
 
 ```
-TfidfVectorizer(ngram_range=(1,2))
+docclf/               shared code: config, extraction, labels, evaluation, classify
+train_model.py        train, evaluate, version and promote a model
+evaluate_holdout.py   score a model on the holdout set
+predict_folder.py     classify a folder of documents
+list_unlabeled.py     find documents that still need labels
+classifier_app.py     Streamlit app
+models/latest.*       the promoted model (committed); models/versions/ is local history
+data/labels.csv       master labels (committed); data/docs/ holds the documents (not committed)
+archive_unused/       old experiments kept for history, not used
 ```
 
-This captures:
-
-* Single words (unigrams)
-* Two-word phrases (bigrams)
-
-Examples:
-
-* "invoice"
-* "amount due"
-* "bill of"
-* "of lading"
-
-Bigrams improve classification accuracy by preserving context.
-
----
-
-**c) Classification Model**
-
-Uses:
-
-```
-LogisticRegression(class_weight="balanced")
-```
-
-* Multinomial logistic regression
-* Learns weights for each document class
-* Outputs class probabilities
-
-Balanced class weighting prevents majority-class bias.
-
----
-
-**d) Evaluation Metrics**
-
-Initial metrics include:
-
-* Accuracy
-* Precision / Recall / F1
-* Confusion Matrix
-
-Example initial run:
-
-* Dataset size: 50 documents
-* Train/Test split: 75% / 25%
-* Test set: 13 documents
-* Accuracy: 1.00
-
-**Important:**
-Perfect scores on small datasets are common but not necessarily indicative of real-world performance.
-
----
-
-### 4. Model Output
-
-Training produces:
-
-```
-doc_type_model.joblib
-```
-
-This serialized model is used by:
-
-* Prediction scripts
-* Streamlit UI
-
----
-
-## Evaluating on Unseen Data (Holdout Validation)
-
-To measure true generalization:
-
-### 1. Create Validation Set
-
-Place new documents into:
-
-```
-data/holdout_eval/
-```
-
----
-
-### 2. Label Validation Documents
-
-Create:
-
-```
-data/holdout_eval_labels.csv
-```
-
-Format:
-
-```
-path,label
-data/holdout_eval/new_doc1.pdf,Bill of Lading
-```
-
----
-
-### 3. Run Evaluation
-
-```bash
-python evaluate_holdout.py
-```
-
-Outputs:
-
-* Accuracy on unseen documents
-* Misclassifications
-* Confidence scores
-* `holdout_results.csv`
-
----
-
-## Running the Streamlit App
-
-Launch locally:
-
-```bash
-streamlit run classifier_app.py
-```
-
-Features:
-
-* Upload PDF or image
-* OCR / text extraction
-* Prediction + confidence
-* Optional manual review threshold
-
----
-
-## Key Design Choices
-
-| Component              | Reason                               |
-| ---------------------- | ------------------------------------ |
-| TF-IDF                 | Works well with small datasets       |
-| ngram_range=(1,2)      | Captures meaningful phrases          |
-| Logistic Regression    | Fast, interpretable, strong baseline |
-| Balanced class weights | Prevents bias                        |
-| OCR fallback           | Handles scanned docs                 |
-
----
-
-## Limitations
-
-* OCR quality affects accuracy
-* Requires labeled examples
-* Streamlit Cloud does not include Tesseract by default
-* Layout understanding is text-based (not vision-layout aware)
-
----
-
-## Future Improvements
-
-* Add more labeled documents
-* Introduce PO classes
-* Confidence-based routing
-* Active learning loop
-* Layout-aware models (LayoutLM / Donut)
-
----
-
-## Requirements
-
-Minimal deployment dependencies:
-
-```
-streamlit
-pymupdf
-pillow
-pytesseract
-scikit-learn
-pandas
-joblib
-```
-
----
-
-## License
-
-
-Just tell me 👍
-```
+Settings such as class names, label aliases, the review threshold and the minimum examples per class are in `docclf/config.py`.

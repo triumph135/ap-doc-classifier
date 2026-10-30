@@ -1,11 +1,14 @@
+# environment
 .venv/
 __pycache__/
 *.pyc
 .DS_Store
 
-# data
+# business documents and archives: never commit these
 data/docs/
 data/holdout_eval/
+data/unlabeled.csv
+data/label_conflicts.csv
 *.pdf
 *.png
 *.jpg
@@ -13,14 +16,16 @@ data/holdout_eval/
 *.tif
 *.tiff
 *.bmp
+*.zip
 
-# outputs
+# regenerated on every run
+data/text_cache/
+models/versions/
 predictions.csv
 holdout_results.csv
 
 # streamlit
 .streamlit/
 
-# model artifacts (choose one option)
-# If you DO want to commit the model, comment this line out:
-# doc_type_model.joblib
+# models/latest.joblib and models/latest.json ARE committed on purpose:
+# the Streamlit app loads them. Commit them only after a promoted training run.

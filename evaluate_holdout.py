@@ -1,55 +1,45 @@
-import pandas as pd
-import joblib
+"""Evaluate a model on the holdout documents in data/labels.csv.
 
-from train_model import extract_text, clean_text  # reuse your functions
-from sklearn.metrics import classification_report, confusion_matrix
+    python evaluate_holdout.py                      # the promoted model
+    python evaluate_holdout.py --model models/versions/<id>/model.joblib
+"""
+import argparse
+
+import pandas as pd
+
+from docclf import config
+from docclf.classify import Classifier
+from docclf.evaluation import evaluate
+from docclf.extraction import file_hash, get_texts
+from docclf.labels import load_labels
+
 
 def main():
-    model = joblib.load("doc_type_model.joblib")
-    df = pd.read_csv("data/holdout_eval_labels.csv")
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--model", default=None)
+    ap.add_argument("--labels", default=str(config.LABELS_CSV))
+    ap.add_argument("--workers", type=int, default=4)
+    args = ap.parse_args()
 
-    y_true = df["label"].tolist()
-    y_pred = []
-    probs = []
+    clf = Classifier(args.model)
+    df = load_labels(args.labels)
+    df = df[df["split"] == "holdout"].reset_index(drop=True)
+    if df.empty:
+        raise SystemExit("No holdout documents. Run: python train_model.py --init-holdout 0.15")
+    print(f"Evaluating {len(df)} holdout documents with model {clf.meta.get('version', 'unknown')}")
+    results = get_texts(df["abs_path"], [file_hash(p) for p in df["abs_path"]], clf.mode, args.workers)
+    texts = [r["text"] for r in results]
+    proba = clf.model.predict_proba(texts)
+    metrics, report = evaluate(df["label"], proba, clf.classes, [r["source"] for r in results], "Holdout set")
+    print(report)
 
-    print(f"Evaluating on {len(df)} holdout documents...")  
+    out = df[["path", "label"]].copy()
+    out["predicted"] = [clf.classes[i] for i in proba.argmax(axis=1)]
+    out["confidence"] = proba.max(axis=1).round(4)
+    out["correct"] = out["label"] == out["predicted"]
+    out.sort_values(["correct", "confidence"], ascending=[True, False]).to_csv("holdout_results.csv", index=False)
+    print("\nSaved holdout_results.csv (mistakes first)")
 
-    for path in df["path"]:
-        text = clean_text(extract_text(path))
-        prob_vec = model.predict_proba([text])[0]
-        classes = model.classes_
-        best_idx = int(prob_vec.argmax())
-        y_pred.append(classes[best_idx])
-        probs.append(float(prob_vec[best_idx]))
-
-
-    out = df.copy()
-    out["pred"] = y_pred
-    out["prob"] = probs
-    out["correct"] = out["pred"] == out["label"]
-    out.to_csv("holdout_results.csv", index=False)
-
-    #print("Accuracy:", out["correct"].mean())
-    #print("Wrong examples:", (~out["correct"]).sum())
-    #print("\nMost confident wrong (if any):")
-    #print(out[~out["correct"]].sort_values("prob", ascending=False).head(10)[["path","label","pred","prob"]])
-
-    #print("\nLowest confidence correct:")
-    #print(out[out["correct"]].sort_values("prob", ascending=True).head(10)[["path","label","pred","prob"]])
-
-    print("Total documents evaluated:", len(out)
-          , "\nCorrect:", out["correct"].sum()
-          , "\nWrong:", (~out["correct"]).sum()
-          , "\nAccuracy:", out["correct"].mean())
-    print(out[out["correct"]][["path","label","pred","prob"]])
-
-    print("\n=== Classification report ===")
-    print(classification_report(y_true, y_pred))
-
-    print("\n=== Confusion matrix (rows=true, cols=pred) ===")
-    labels_sorted = sorted(list(set(y_true)))
-    print(labels_sorted)
-    print(confusion_matrix(y_true, y_pred, labels=labels_sorted))
 
 if __name__ == "__main__":
     main()
