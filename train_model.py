@@ -96,6 +96,8 @@ def resolve_duplicates(df):
 def run_cv(texts, y, groups, folds, C):
     classes = sorted(set(y))
     folds = min(folds, int(pd.Series(y).value_counts().min()))
+    if groups is not None:
+        folds = min(folds, len(set(groups)))  # every fold needs at least one whole group
     if folds < 2:
         return None, classes
     if groups is not None:
@@ -105,6 +107,16 @@ def run_cv(texts, y, groups, folds, C):
         cv = StratifiedKFold(n_splits=folds, shuffle=True, random_state=config.RANDOM_SEED)
         proba = cross_val_predict(build_model(C), texts, y, cv=cv, method="predict_proba")
     return proba, classes
+
+
+def group_table(oof, group):
+    """Out of fold accuracy per group, plus the label mix, so a vendor that always shares one label stands out."""
+    d = oof.assign(group=group.str.strip().replace("", "(none)"))
+    lines = ["Out of fold accuracy by group (each group was predicted by models that never saw it)"]
+    for g, sub in d.groupby("group"):
+        mix = ", ".join(f"{k} {v}" for k, v in sub["label"].value_counts().items())
+        lines.append(f"  {g:<16} n={len(sub):<5} accuracy={sub['correct'].mean():.3f}   ({mix})")
+    return "\n".join(lines)
 
 
 def holdout_macro_f1(model, texts, labels):
@@ -213,11 +225,21 @@ def main():
     proba, cv_classes = run_cv(texts, y, groups, args.folds, args.C)
     oof = None
     if proba is not None:
-        metrics["cross_validation"], text = evaluate(y, proba, cv_classes, train["source"], f"{args.folds} fold cross validation")
+        kind = "whole groups held out" if groups is not None else "random folds"
+        metrics["cross_validation"], text = evaluate(y, proba, cv_classes, train["source"],
+                                                     f"{args.folds} fold cross validation ({kind})")
         reports.append(text)
         pred = np.asarray(cv_classes)[proba.argmax(axis=1)]
         oof = train[["path", "label", "source"]].assign(predicted=pred, confidence=proba.max(axis=1).round(4))
         oof["correct"] = oof["label"] == oof["predicted"]
+        if groups is not None:
+            reports.append(group_table(oof, train["group"]))
+            print("Cross validation with random folds, for comparison...")
+            proba_r, _ = run_cv(texts, y, None, args.folds, args.C)
+            metrics["cross_validation_random_folds"], text_r = evaluate(
+                y, proba_r, cv_classes, train["source"],
+                f"{args.folds} fold cross validation (random folds: the same group can be in train and test)")
+            reports.append(text_r)
     else:
         reports.append("Cross validation skipped: a class has too few examples.")
 
