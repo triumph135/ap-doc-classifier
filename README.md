@@ -54,7 +54,7 @@ What a run does:
 * Evaluates with 5 fold cross validation and the holdout set, and saves a dated model with a metadata file (classes, counts, library versions, scores).
 * Promotes the new model only if its holdout score is not worse than the current model on the same holdout documents.
 
-Optional columns in `labels.csv`: `split` (`holdout` or blank) and `group` (for example vendor or site). When `group` is filled in, documents from the same group are kept in the same cross validation fold, which gives a more honest score when many documents share a template.
+Optional columns in `labels.csv`: `split` (`holdout` or blank) and `group` (whatever should be held out together, for example a vendor or a customer). When `group` is filled in, documents from the same group are kept in the same cross validation fold, which gives a more honest score on sources the model has not seen. The training report then shows that score next to the usual random fold score, plus accuracy per group.
 
 ## Using the model
 
@@ -72,6 +72,7 @@ The app has a "Why this result?" section that shows how familiar the document's 
 * **Class coverage.** A model can only answer with classes it was trained on. Until a class has examples, documents of that type will be sent to a different class or to manual review.
 * **Scanned versus digital documents.** If one class is mostly scans and another mostly digital PDFs, a model can learn the scan type instead of the content. The reports show accuracy by text source and by class and source. Watch for large gaps, and consider `python train_model.py --mode ocr` (OCR every page for consistency, slower).
 * **One document type per file.** Customers are instructed to send a BOL purchase or a BOL invoice on its own. A file that combines both is classified from its first pages and is best left out of the labels file.
+* **Handwriting.** OCR cannot read handwritten documents. They come back with too little text and go to manual review, and they are left out of training automatically.
 * **Text only.** The model reads words, not page layout. If two types share nearly identical wording, layout features or a layout aware model would be the next step.
 * **Library versions.** A saved model only loads reliably with the scikit-learn version that trained it. `requirements.txt` pins it, and the app warns on a mismatch.
 * **What is committed.** Documents, extracted text and zip exports are git ignored. The labels file lists file names, and the model file contains words from the training documents, so review those before publishing.

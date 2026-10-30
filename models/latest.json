@@ -1,6 +1,6 @@
 {
-  "version": "20261030-120217",
-  "trained_at": "2026-10-30T12:02:17",
+  "version": "20261030-172918",
+  "trained_at": "2026-10-30T17:29:18",
   "classes": [
     "BOL Invoice",
     "BOL Purchase"
@@ -10,178 +10,258 @@
     "PO Invoice"
   ],
   "documents_per_class": {
-    "BOL Purchase": 462,
-    "BOL Invoice": 383
+    "BOL Purchase": 495,
+    "BOL Invoice": 407
   },
-  "training_documents": 845,
+  "training_documents": 902,
   "holdout_documents": 148,
   "extraction_mode": "ocr",
   "extraction_version": 1,
   "sklearn_version": "1.8.0",
-  "git_commit": "a9767e4",
-  "labels_file_sha1": "95d19d485f8690f6d7a51475665cc183ee7710f7",
+  "git_commit": "f484563",
+  "labels_file_sha1": "ad190f95a4e300f8d63e34ab4e6643de388e199e",
   "C": 1.0,
   "metrics": {
     "cross_validation": {
-      "n": 845,
-      "accuracy": 0.9905325443786982,
-      "macro_f1": 0.9904447434781134,
+      "n": 902,
+      "accuracy": 0.9977827050997783,
+      "macro_f1": 0.9977623640549338,
       "per_class": {
         "BOL Invoice": {
-          "precision": 0.9921259842519685,
-          "recall": 0.9869451697127938,
-          "f1-score": 0.9895287958115183,
-          "support": 383.0
+          "precision": 0.9951100244498777,
+          "recall": 1.0,
+          "f1-score": 0.9975490196078431,
+          "support": 407.0
         },
         "BOL Purchase": {
-          "precision": 0.9892241379310345,
-          "recall": 0.9935064935064936,
-          "f1-score": 0.9913606911447084,
-          "support": 462.0
+          "precision": 1.0,
+          "recall": 0.9959595959595959,
+          "f1-score": 0.9979757085020243,
+          "support": 495.0
         },
-        "accuracy": 0.9905325443786982,
+        "accuracy": 0.9977827050997783,
         "macro avg": {
-          "precision": 0.9906750610915015,
-          "recall": 0.9902258316096437,
-          "f1-score": 0.9904447434781134,
-          "support": 845.0
+          "precision": 0.9975550122249388,
+          "recall": 0.997979797979798,
+          "f1-score": 0.9977623640549338,
+          "support": 902.0
         },
         "weighted avg": {
-          "precision": 0.990539412654014,
-          "recall": 0.9905325443786982,
-          "f1-score": 0.9905303764552269,
-          "support": 845.0
+          "precision": 0.9977935476176277,
+          "recall": 0.9977827050997783,
+          "f1-score": 0.9977831781473329,
+          "support": 902.0
         }
       },
       "by_source": {
         "ocr": {
-          "n": 845,
-          "accuracy": 0.9905325443786982
+          "n": 902,
+          "accuracy": 0.9977827050997783
         }
       },
       "by_class_source": {
         "BOL Invoice | ocr": {
-          "n": 383,
-          "accuracy": 0.9869451697127938
+          "n": 407,
+          "accuracy": 1.0
         },
         "BOL Purchase | ocr": {
-          "n": 462,
-          "accuracy": 0.9935064935064936
+          "n": 495,
+          "accuracy": 0.9959595959595959
         }
       },
       "thresholds": [
         {
           "threshold": 0.5,
           "auto_processed": 1.0,
-          "accuracy_of_auto": 0.9905325443786982,
-          "errors_let_through": 8
+          "accuracy_of_auto": 0.9977827050997783,
+          "errors_let_through": 2
         },
         {
           "threshold": 0.6,
-          "auto_processed": 0.9988165680473373,
-          "accuracy_of_auto": 0.9917061611374408,
-          "errors_let_through": 7
+          "auto_processed": 0.9944567627494457,
+          "accuracy_of_auto": 0.9977703455964325,
+          "errors_let_through": 2
         },
         {
           "threshold": 0.7,
-          "auto_processed": 0.9952662721893492,
-          "accuracy_of_auto": 0.9940546967895363,
-          "errors_let_through": 5
+          "auto_processed": 0.9478935698447893,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         },
         {
           "threshold": 0.8,
-          "auto_processed": 0.9834319526627219,
-          "accuracy_of_auto": 0.9939831528279182,
-          "errors_let_through": 5
+          "auto_processed": 0.7039911308203991,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         },
         {
           "threshold": 0.9,
-          "auto_processed": 0.9668639053254438,
-          "accuracy_of_auto": 0.9975520195838433,
-          "errors_let_through": 2
+          "auto_processed": 0.3137472283813747,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
+        }
+      ]
+    },
+    "cross_validation_random_folds": {
+      "n": 902,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "per_class": {
+        "BOL Invoice": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 407.0
+        },
+        "BOL Purchase": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 495.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 902.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 902.0
+        }
+      },
+      "by_source": {
+        "ocr": {
+          "n": 902,
+          "accuracy": 1.0
+        }
+      },
+      "by_class_source": {
+        "BOL Invoice | ocr": {
+          "n": 407,
+          "accuracy": 1.0
+        },
+        "BOL Purchase | ocr": {
+          "n": 495,
+          "accuracy": 1.0
+        }
+      },
+      "thresholds": [
+        {
+          "threshold": 0.5,
+          "auto_processed": 1.0,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
+        },
+        {
+          "threshold": 0.6,
+          "auto_processed": 0.9977827050997783,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
+        },
+        {
+          "threshold": 0.7,
+          "auto_processed": 0.9933481152993349,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
+        },
+        {
+          "threshold": 0.8,
+          "auto_processed": 0.9711751662971175,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
+        },
+        {
+          "threshold": 0.9,
+          "auto_processed": 0.9135254988913526,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         }
       ]
     },
     "holdout": {
       "n": 148,
-      "accuracy": 0.9864864864864865,
-      "macro_f1": 0.9863644739266629,
+      "accuracy": 0.9932432432432432,
+      "macro_f1": 0.9931300190317041,
       "per_class": {
         "BOL Invoice": {
-          "precision": 0.9850746268656716,
-          "recall": 0.9850746268656716,
-          "f1-score": 0.9850746268656716,
-          "support": 67.0
+          "precision": 0.9846153846153847,
+          "recall": 1.0,
+          "f1-score": 0.9922480620155039,
+          "support": 64.0
         },
         "BOL Purchase": {
-          "precision": 0.9876543209876543,
-          "recall": 0.9876543209876543,
-          "f1-score": 0.9876543209876543,
-          "support": 81.0
+          "precision": 1.0,
+          "recall": 0.9880952380952381,
+          "f1-score": 0.9940119760479041,
+          "support": 84.0
         },
-        "accuracy": 0.9864864864864865,
+        "accuracy": 0.9932432432432432,
         "macro avg": {
-          "precision": 0.9863644739266629,
-          "recall": 0.9863644739266629,
-          "f1-score": 0.9863644739266629,
+          "precision": 0.9923076923076923,
+          "recall": 0.9940476190476191,
+          "f1-score": 0.9931300190317041,
           "support": 148.0
         },
         "weighted avg": {
-          "precision": 0.9864864864864865,
-          "recall": 0.9864864864864865,
-          "f1-score": 0.9864864864864865,
+          "precision": 0.9933471933471933,
+          "recall": 0.9932432432432432,
+          "f1-score": 0.9932492024122715,
           "support": 148.0
         }
       },
       "by_source": {
         "ocr": {
           "n": 148,
-          "accuracy": 0.9864864864864865
+          "accuracy": 0.9932432432432432
         }
       },
       "by_class_source": {
         "BOL Invoice | ocr": {
-          "n": 67,
-          "accuracy": 0.9850746268656716
+          "n": 64,
+          "accuracy": 1.0
         },
         "BOL Purchase | ocr": {
-          "n": 81,
-          "accuracy": 0.9876543209876543
+          "n": 84,
+          "accuracy": 0.9880952380952381
         }
       },
       "thresholds": [
         {
           "threshold": 0.5,
           "auto_processed": 1.0,
-          "accuracy_of_auto": 0.9864864864864865,
-          "errors_let_through": 2
+          "accuracy_of_auto": 0.9932432432432432,
+          "errors_let_through": 1
         },
         {
           "threshold": 0.6,
-          "auto_processed": 0.9932432432432432,
-          "accuracy_of_auto": 0.9863945578231292,
-          "errors_let_through": 2
+          "auto_processed": 0.9864864864864865,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         },
         {
           "threshold": 0.7,
-          "auto_processed": 0.9797297297297297,
-          "accuracy_of_auto": 0.993103448275862,
-          "errors_let_through": 1
+          "auto_processed": 0.9864864864864865,
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         },
         {
           "threshold": 0.8,
           "auto_processed": 0.972972972972973,
-          "accuracy_of_auto": 0.9930555555555556,
-          "errors_let_through": 1
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         },
         {
           "threshold": 0.9,
           "auto_processed": 0.9662162162162162,
-          "accuracy_of_auto": 0.993006993006993,
-          "errors_let_through": 1
+          "accuracy_of_auto": 1.0,
+          "errors_let_through": 0
         }
       ]
     }
   },
-  "promoted_at": "2026-10-30T12:02:19"
+  "promoted_at": "2026-10-30T17:29:20"
 }

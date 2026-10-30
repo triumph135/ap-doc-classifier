@@ -1,0 +1,58 @@
+path,label,split,group
+data/docs/vendor_check/TGO/BOL2.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL3.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL4.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL5.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL6.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL7.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL8.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009844_Shawleys_Superior_Gas.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009845_HJ_Poist_Woodbine.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009854_HJ_Poist_Savage.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009861_HJ_Poist_Savage.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009878_Shawleys_Superior_Gas.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009885_Shawleys_Superior_Gas.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009887_HJ_Poist_Savage.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009895_HJ_Poist_Woodbine.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/TGO/BOL_1009903_HJ_Poist_Savage.pdf,BOL Purchase,,TGO
+data/docs/vendor_check/EDP/ExportedBOLs_1757090189963.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090193898.pdf,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090196554.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090199577.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090202878.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090205591.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090208722.pdf,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/ExportedBOLs_1757090212567.pdf,BOL Purchase,,EDPexports
+data/docs/vendor_check/Other/Example 1.pdf,BOL Purchase,,ExampleDocs
+data/docs/vendor_check/Blossman/BOL52026.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/Blossman/CamScanner 10-20-25 09.07.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/Blossman/Gre-NC-058-BR01_20260211_081603.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/Blossman/Gre-NC-058-BR01_20260226_073702.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/Blossman/Lex-NC-504-BR01_20260226_081506.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/Blossman/Syl-NC-055-BR01_20260211_084435.pdf,BOL Purchase,,Blossman
+data/docs/vendor_check/TGO/Inv464506.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/TGO/Inv464509.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/TGO/Inv464510.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/TGO/Inv464511.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/TGO/Inv464512.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/TGO/InvS240274Kiros.pdf,BOL Invoice,,TGO
+data/docs/vendor_check/EDP/520601_202505271852063565.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58510_202505151718007562.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58547_202505071631312594.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58553_202505151717401467.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58559_202505271853051537.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58572_202506091730502161.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/EDP/58573_202506091741184355.PDF,BOL Invoice,,EDPexports
+data/docs/vendor_check/Foster/Atlas Oil 2094086 2094086-D1_202504230826291635.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Colonial 1542683_202504231003195471.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Exxon Mobil 30397390_202504231013068614.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Global 25247570_202504231107492679.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Huguenot 0544146_202504231354155839.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Mansfield 26408966_202504250822534095.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Foster/Murphy 2583801_202504231528536961.pdf,BOL Invoice,,Foster
+data/docs/vendor_check/Sage/205371492 bol 1654198 - Invoice.pdf,BOL Invoice,,Sage
+data/docs/vendor_check/Sage/2445504 bol 1656387 - Invoice.pdf,BOL Invoice,,Sage
+data/docs/vendor_check/Sage/246157-IN bol 1650353 - Invoice.pdf,BOL Invoice,,Sage
+data/docs/vendor_check/Sage/247523-IN bol 1654195 - Invoice.pdf,BOL Invoice,,Sage
+data/docs/vendor_check/Sage/2988694 bol 1652167 - Invoice.pdf,BOL Invoice,,Sage
+data/docs/vendor_check/Sage/3067131837 bol 1651848 - Invoice.pdf,BOL Invoice,,Sage
